@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => QuizPage(playerName: name),
+        builder: (context) => QuizPage(userName: name), // ✅ diperbaiki di sini
       ),
     );
   }
