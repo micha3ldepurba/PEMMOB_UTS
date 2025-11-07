@@ -5,7 +5,13 @@ import '../widgets/question_card.dart';
 
 class QuizPage extends StatefulWidget {
   final String userName;
-  const QuizPage({super.key, required this.userName});
+  final String category;
+
+  const QuizPage({
+    super.key,
+    required this.userName,
+    required this.category,
+  });
 
   @override
   State<QuizPage> createState() => _QuizPageState();
@@ -14,176 +20,220 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   int currentIndex = 0;
   int score = 0;
-
-  late final List<Map<String, dynamic>> questions;
   final List<Map<String, dynamic>> userAnswers = [];
+  late final List<Map<String, dynamic>> questions;
 
-  final List<Map<String, dynamic>> _allQuestions = [
-    {
-      "question": "Kopi jenis apa yang paling terkenal dari Indonesia?",
-      "options": ["Arabika", "Liberika", "Robusta", "Excelsa"],
-      "answer": "Arabika",
-      "description":
-          "Kopi Arabika dikenal sebagai kopi unggulan dari Indonesia dengan cita rasa lembut dan sedikit asam."
-    },
-    {
-      "question": "Metode seduh kopi manual yang populer disebut apa?",
-      "options": ["Espresso", "Pour Over", "Instant", "Cold Brew"],
-      "answer": "Pour Over",
-      "description":
-          "Pour Over adalah metode manual brewing dengan menuangkan air panas perlahan di atas bubuk kopi."
-    },
-    {
-      "question": "Apa efek utama kafein pada tubuh manusia?",
-      "options": [
-        "Mengantuk",
-        "Meningkatkan fokus",
-        "Menurunkan energi",
-        "Menyebabkan lapar"
-      ],
-      "answer": "Meningkatkan fokus",
-      "description":
-          "Kafein bekerja sebagai stimulan yang membantu meningkatkan fokus dan kewaspadaan."
-    },
-    {
-      "question": "Apa yang dimaksud dengan single origin coffee?",
-      "options": [
-        "Campuran berbagai biji kopi",
-        "Kopi dari satu daerah tertentu",
-        "Kopi tanpa kafein",
-        "Kopi yang dicampur susu"
-      ],
-      "answer": "Kopi dari satu daerah tertentu",
-      "description":
-          "Single origin artinya biji kopi berasal dari satu lokasi atau perkebunan tertentu."
-    },
-    {
-      "question": "Proses pemanggangan biji kopi disebut?",
-      "options": ["Grinding", "Roasting", "Brewing", "Filtering"],
-      "answer": "Roasting",
-      "description":
-          "Roasting adalah proses pemanggangan biji kopi mentah untuk mengeluarkan aroma dan rasa khasnya."
-    },
-    {
-      "question": "Alat seduh berbentuk kerucut dengan filter disebut?",
-      "options": ["French Press", "V60", "Moka Pot", "AeroPress"],
-      "answer": "V60",
-      "description":
-          "V60 adalah alat pour-over berbentuk kerucut yang populer digunakan untuk menyeduh kopi manual."
-    },
-    {
-      "question": "Espresso berasal dari negara mana?",
-      "options": ["Brasil", "Italia", "Ethiopia", "Peru"],
-      "answer": "Italia",
-      "description":
-          "Espresso berasal dari Italia dan menjadi dasar dari berbagai minuman kopi modern."
-    },
-    {
-      "question": "Apa perbedaan utama antara latte dan cappuccino?",
-      "options": ["Jumlah susu dan busa", "Jenis biji kopi", "Suhu air", "Cara penyajian"],
-      "answer": "Jumlah susu dan busa",
-      "description":
-          "Latte memiliki lebih banyak susu dan lebih sedikit busa dibanding cappuccino."
-    },
-    {
-      "question": "Kopi luwak terkenal karena apa?",
-      "options": [
-        "Rasa pahitnya",
-        "Proses fermentasi alami oleh luwak",
-        "Asal dari Bali",
-        "Diseduh dengan susu kambing"
-      ],
-      "answer": "Proses fermentasi alami oleh luwak",
-      "description":
-          "Kopi luwak berasal dari biji kopi yang dimakan dan dikeluarkan kembali oleh luwak, memberikan rasa khas."
-    },
-    {
-      "question": "Cold brew dibuat dengan cara apa?",
-      "options": [
-        "Menggunakan air panas",
-        "Diseduh dengan air dingin lama",
-        "Dicampur soda",
-        "Diseduh dengan es batu langsung"
-      ],
-      "answer": "Diseduh dengan air dingin lama",
-      "description":
-          "Cold brew dibuat dengan merendam bubuk kopi dalam air dingin selama 8–24 jam."
-    },
-    {
-      "question": "Apa fungsi utama dari tamper dalam pembuatan espresso?",
-      "options": ["Menekan bubuk kopi", "Menyaring air", "Mengatur suhu", "Membuat busa"],
-      "answer": "Menekan bubuk kopi",
-      "description":
-          "Tamper digunakan untuk memadatkan bubuk kopi di portafilter agar ekstraksi lebih merata."
-    },
-    {
-      "question": "Negara penghasil kopi terbesar di dunia adalah?",
-      "options": ["Brasil", "Kolombia", "Indonesia", "Vietnam"],
-      "answer": "Brasil",
-      "description":
-          "Brasil dikenal sebagai produsen kopi terbesar di dunia karena iklim dan lahan yang ideal."
-    },
-    {
-      "question": "Robusta memiliki kadar kafein lebih ... dari Arabika?",
-      "options": ["Tinggi", "Rendah", "Sama", "Tidak tentu"],
-      "answer": "Tinggi",
-      "description":
-          "Kopi Robusta mengandung kafein hampir dua kali lipat lebih banyak dari Arabika."
-    },
-    {
-      "question": "Kopi decaf berarti apa?",
-      "options": ["Tanpa kafein", "Kopi dingin", "Kopi susu", "Kopi hitam pekat"],
-      "answer": "Tanpa kafein",
-      "description":
-          "Decaf coffee telah melewati proses pengurangan kadar kafein hingga hampir nol."
-    },
-    {
-      "question": "Kopi dari Gayo terkenal karena?",
-      "options": [
-        "Aromanya kuat dan asam seimbang",
-        "Pahit ekstrem",
-        "Dingin saat disajikan",
-        "Rasanya hambar"
-      ],
-      "answer": "Aromanya kuat dan asam seimbang",
-      "description":
-          "Kopi Gayo dari Aceh dikenal karena aroma kuat, keasaman seimbang, dan body yang halus."
-    },
-  ];
+  final Map<String, List<Map<String, dynamic>>> quizData = {
+    "Dasar Kopi": [
+      {
+        "question": "Kopi jenis apa yang paling terkenal dari Indonesia?",
+        "options": ["Arabika", "Liberika", "Robusta", "Excelsa"],
+        "answer": "Arabika",
+        "desc":
+            "Kopi Arabika banyak dibudidayakan di dataran tinggi Indonesia seperti Gayo, Toraja, dan Kintamani."
+      },
+      {
+        "question": "Kandungan utama dalam kopi yang membuat orang tetap terjaga?",
+        "options": ["Klorofil", "Kafein", "Vitamin C", "Protein"],
+        "answer": "Kafein",
+        "desc":
+            "Kafein adalah stimulan alami yang meningkatkan fokus dan mengurangi rasa kantuk."
+      },
+      {
+        "question": "Proses mengubah biji kopi mentah menjadi biji kopi siap seduh disebut?",
+        "options": ["Grinding", "Roasting", "Brewing", "Filtering"],
+        "answer": "Roasting",
+        "desc":
+            "Roasting adalah proses pemanggangan biji kopi hijau hingga mengeluarkan aroma dan rasa khas kopi."
+      },
+      {
+        "question": "Negara mana yang dikenal sebagai asal mula kopi?",
+        "options": ["Ethiopia", "Brasil", "Yemen", "Kolombia"],
+        "answer": "Ethiopia",
+        "desc":
+            "Legenda menyebutkan kopi pertama kali ditemukan di Ethiopia oleh penggembala kambing bernama Kaldi."
+      },
+      {
+        "question": "Jenis biji kopi yang memiliki rasa lebih kuat dan kadar kafein tinggi adalah?",
+        "options": ["Arabika", "Liberika", "Robusta", "Excelsa"],
+        "answer": "Robusta",
+        "desc":
+            "Kopi Robusta lebih pahit dan memiliki lebih banyak kafein daripada Arabika."
+      },
+      {
+        "question": "Suhu ideal air untuk menyeduh kopi adalah sekitar?",
+        "options": ["60°C", "70°C", "90–96°C", "100°C"],
+        "answer": "90–96°C",
+        "desc":
+            "Air mendidih (100°C) bisa membuat rasa kopi pahit, jadi suhu ideal sedikit di bawah titik didih."
+      },
+      {
+        "question": "Kopi instan dibuat dari?",
+        "options": [
+          "Biji kopi mentah",
+          "Kopi seduh yang dikeringkan",
+          "Kopi bubuk biasa",
+          "Biji kakao"
+        ],
+        "answer": "Kopi seduh yang dikeringkan",
+        "desc":
+            "Kopi instan dibuat dengan mengeringkan ekstrak kopi seduh agar mudah larut kembali dengan air panas."
+      },
+      {
+        "question": "Kopi Toraja berasal dari pulau?",
+        "options": ["Sumatra", "Sulawesi", "Bali", "Kalimantan"],
+        "answer": "Sulawesi",
+        "desc":
+            "Toraja adalah salah satu kopi premium dari Sulawesi dengan cita rasa rempah yang khas."
+      },
+      {
+        "question": "Alat penggiling kopi disebut?",
+        "options": ["Filter", "Kettle", "Grinder", "Press"],
+        "answer": "Grinder",
+        "desc":
+            "Grinder digunakan untuk menggiling biji kopi agar sesuai dengan metode seduh yang digunakan."
+      },
+    ],
+    "Manual Brew": [
+      {
+        "question": "Metode seduh kopi manual yang populer disebut apa?",
+        "options": ["Espresso", "Pour Over", "Instant", "Cold Brew"],
+        "answer": "Pour Over",
+        "desc":
+            "Pour Over adalah teknik manual brewing menggunakan alat seperti V60 atau Kalita."
+      },
+      {
+        "question": "French Press menggunakan alat dengan bagian utama berupa?",
+        "options": ["Kertas filter", "Logam berpori", "Plunger dan beaker kaca", "Tabung tekanan"],
+        "answer": "Plunger dan beaker kaca",
+        "desc":
+            "French Press menyeduh kopi dengan merendam bubuk kopi lalu menekan plunger untuk memisah ampas."
+      },
+      {
+        "question": "Metode seduh yang menggunakan tekanan udara disebut?",
+        "options": ["Chemex", "AeroPress", "Siphon", "Cold Drip"],
+        "answer": "AeroPress",
+        "desc":
+            "AeroPress menggunakan tekanan udara untuk mengekstrak kopi secara cepat dengan rasa bersih dan kuat."
+      },
+      {
+        "question": "Metode manual yang menggunakan dua bejana dan panas api adalah?",
+        "options": ["Moka Pot", "Siphon", "Cold Brew", "Drip"],
+        "answer": "Siphon",
+        "desc":
+            "Siphon bekerja dengan tekanan uap air, menghasilkan kopi yang sangat jernih dan kompleks aromanya."
+      },
+      {
+        "question": "Berapa lama waktu ideal menyeduh kopi dengan metode French Press?",
+        "options": ["1 menit", "2 menit", "4 menit", "10 menit"],
+        "answer": "4 menit",
+        "desc":
+            "Durasi 4 menit memberikan keseimbangan antara ekstraksi rasa dan kejernihan kopi."
+      },
+      {
+        "question": "Cold Brew dibuat dengan cara?",
+        "options": [
+          "Air panas diseduh cepat",
+          "Air dingin diseduh lama",
+          "Air es ditekan",
+          "Dipanaskan ulang"
+        ],
+        "answer": "Air dingin diseduh lama",
+        "desc":
+            "Cold Brew diseduh selama 8–12 jam menggunakan air dingin, menghasilkan rasa lembut dan rendah asam."
+      },
+      {
+        "question": "Chemex menggunakan filter jenis apa?",
+        "options": ["Filter logam", "Filter kertas tebal", "Tanpa filter", "Filter kain"],
+        "answer": "Filter kertas tebal",
+        "desc": "Filter Chemex lebih tebal dari V60, membuat hasil kopi lebih bersih dan ringan."
+      },
+    ],
+    "Sejarah Kopi": [
+      {
+        "question": "Siapa yang dipercaya pertama kali menemukan kopi?",
+        "options": ["Kaldi", "Marco Polo", "Ras Tafari", "Columbus"],
+        "answer": "Kaldi",
+        "desc":
+            "Legenda menyebutkan penggembala kambing bernama Kaldi menemukan kopi setelah melihat kambingnya berenergi setelah makan buah kopi."
+      },
+      {
+        "question": "Kopi pertama kali dibawa ke Eropa oleh bangsa?",
+        "options": ["Arab", "Turki", "Belanda", "Italia"],
+        "answer": "Belanda",
+        "desc": "Belanda memperkenalkan kopi ke Eropa melalui koloni mereka, termasuk Indonesia."
+      },
+      {
+        "question": "Pulau Jawa dikenal di dunia karena?",
+        "options": ["Rempah-rempah", "Kopi Jawa", "Teh hijau", "Susu sapi"],
+        "answer": "Kopi Jawa",
+        "desc":
+            "Istilah 'Java Coffee' bahkan masih digunakan di dunia Barat untuk menyebut kopi."
+      },
+      {
+        "question": "Kapan kopi mulai dibudidayakan di Indonesia?",
+        "options": ["Abad ke-17", "Abad ke-18", "Abad ke-19", "Abad ke-20"],
+        "answer": "Abad ke-17",
+        "desc": "Belanda mulai menanam kopi di Batavia dan Jawa pada abad ke-17."
+      },
+      {
+        "question": "Negara mana yang sekarang menjadi penghasil kopi terbesar dunia?",
+        "options": ["Brasil", "Vietnam", "Kolombia", "Indonesia"],
+        "answer": "Brasil",
+        "desc":
+            "Brasil mendominasi produksi kopi dunia dengan ekspor besar dari biji Arabika dan Robusta."
+      },
+      {
+        "question": "Kopi pertama kali diekspor dari Indonesia ke Eropa melalui pelabuhan?",
+        "options": ["Batavia", "Surabaya", "Medan", "Makassar"],
+        "answer": "Batavia",
+        "desc":
+            "Batavia (sekarang Jakarta) dulu menjadi pusat perdagangan kopi Asia Tenggara di bawah VOC."
+      },
+    ],
+  };
 
   @override
   void initState() {
     super.initState();
-    questions = List<Map<String, dynamic>>.from(_allQuestions)
-      ..shuffle(Random())
-      ..length = 10;
+    final selected = quizData[widget.category] ?? [];
+    questions = List<Map<String, dynamic>>.from(selected)..shuffle(Random());
+    if (questions.length > 8) {
+      questions.removeRange(8, questions.length);
+    }
   }
 
   void checkAnswer(String selected) {
-    final correct = questions[currentIndex]["answer"];
-    final desc = questions[currentIndex]["description"];
+    final current = questions[currentIndex];
+    final correct = current["answer"];
+    final desc = current["desc"];
     final isCorrect = selected == correct;
 
     userAnswers.add({
-      "question": questions[currentIndex]["question"],
+      "question": current["question"],
       "selected": selected,
       "correct": correct,
+      "desc": desc,
       "isCorrect": isCorrect,
-      "description": desc,
     });
 
-    if (isCorrect) {
-      score++;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("✅ Benar! $desc")),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("❌ Salah! $desc")),
-      );
-    }
+    if (isCorrect) score++;
 
-    Future.delayed(const Duration(seconds: 2), () {
+    // ✅ Notifikasi benar/salah
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: isCorrect ? Colors.green : Colors.red,
+        duration: const Duration(seconds: 1),
+        content: Text(
+          isCorrect
+              ? "Benar! 🎉"
+              : "Salah 😢, Jawaban: $correct",
+          style: const TextStyle(color: Colors.white),
+        ),
+      ),
+    );
+
+    Future.delayed(const Duration(milliseconds: 800), () {
       if (currentIndex < questions.length - 1) {
         setState(() => currentIndex++);
       } else {
@@ -195,6 +245,7 @@ class _QuizPageState extends State<QuizPage> {
               score: score,
               total: questions.length,
               userAnswers: userAnswers,
+              questions: questions,
             ),
           ),
         );
@@ -206,10 +257,7 @@ class _QuizPageState extends State<QuizPage> {
   Widget build(BuildContext context) {
     final q = questions[currentIndex];
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Halo, ${widget.userName}! ☕"),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
+      appBar: AppBar(title: Text("Kategori: ${widget.category}")),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -217,14 +265,13 @@ class _QuizPageState extends State<QuizPage> {
           children: [
             QuestionCard(
               question: q["question"],
-              options: q["options"],
+              options: List<String>.from(q["options"]),
               onOptionSelected: checkAnswer,
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             Text(
               "Pertanyaan ${currentIndex + 1} dari ${questions.length}",
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ],
         ),

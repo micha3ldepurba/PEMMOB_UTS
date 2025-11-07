@@ -5,6 +5,7 @@ class ResultPage extends StatelessWidget {
   final int score;
   final int total;
   final List<Map<String, dynamic>> userAnswers;
+  final List<Map<String, dynamic>> questions;
 
   const ResultPage({
     super.key,
@@ -12,69 +13,41 @@ class ResultPage extends StatelessWidget {
     required this.score,
     required this.total,
     required this.userAnswers,
+    required this.questions,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Hasil Kuis ☕"),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
+      appBar: AppBar(title: const Text("Hasil Quiz")),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Selamat, $userName!",
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "Skor kamu: $score / $total",
-              style: const TextStyle(fontSize: 20, color: Colors.blueAccent),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 25),
+            Text("Hai $userName!",
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            Text("Skor kamu: $score / $total",
+                style: const TextStyle(fontSize: 20)),
+            const Divider(height: 30),
             Expanded(
               child: ListView.builder(
                 itemCount: userAnswers.length,
                 itemBuilder: (context, index) {
                   final ans = userAnswers[index];
                   return Card(
-                    color: ans["isCorrect"] ? Colors.green[50] : Colors.red[50],
-                    elevation: 2,
+                    color: ans["isCorrect"]
+                        ? Colors.green[100]
+                        : Colors.red[100],
                     margin: const EdgeInsets.symmetric(vertical: 6),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
+                    child: ListTile(
+                      title: Text(ans["question"]),
+                      subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Q${index + 1}: ${ans["question"]}",
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            "Jawaban kamu: ${ans["selected"]}",
-                            style: TextStyle(
-                              color: ans["isCorrect"]
-                                  ? Colors.green
-                                  : Colors.redAccent,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text("Jawaban benar: ${ans["correct"]}"),
-                          const SizedBox(height: 4),
-                          Text(
-                            ans["description"],
-                            style: const TextStyle(
-                              fontStyle: FontStyle.italic,
-                              color: Colors.black87,
-                            ),
-                          ),
+                          Text("Jawabanmu: ${ans["selected"]}"),
+                          Text("Benar: ${ans["correct"]}"),
+                          Text(ans["desc"]),
                         ],
                       ),
                     ),
@@ -82,19 +55,6 @@ class ResultPage extends StatelessWidget {
                 },
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: const Text("Main Lagi 🔁"),
-            )
           ],
         ),
       ),

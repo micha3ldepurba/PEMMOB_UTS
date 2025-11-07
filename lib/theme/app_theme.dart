@@ -1,65 +1,40 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // 🎨 Tema terang (Light Theme)
-  static ThemeData lightTheme = ThemeData(
-    brightness: Brightness.light,
-    primaryColor: Colors.blueAccent,
-    scaffoldBackgroundColor: Colors.white,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.blueAccent,
-      foregroundColor: Colors.white,
-      elevation: 0,
+  static final MaterialColor baseColor = MaterialColor(0xFF6F4E37, {
+    50: const Color(0xFFF3EDE9),
+    100: const Color(0xFFE1D0C1),
+    200: const Color(0xFFCEB298),
+    300: const Color(0xFFBA946F),
+    400: const Color(0xFFA9784E),
+    500: const Color(0xFF6F4E37),
+    600: const Color(0xFF624531),
+    700: const Color(0xFF543B2A),
+    800: const Color(0xFF463124),
+    900: const Color(0xFF38271E),
+  });
+
+  static final lightTheme = ThemeData(
+    colorScheme: ColorScheme.light(
+      primary: baseColor[500]!,
+      secondary: baseColor[200]!,
     ),
-    textTheme: const TextTheme(
-      bodyMedium: TextStyle(color: Colors.black87, fontSize: 16),
-      headlineSmall: TextStyle(
-        color: Colors.black,
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
+    scaffoldBackgroundColor: Colors.brown[50],
+    appBarTheme: AppBarTheme(backgroundColor: baseColor[500]),
     elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blueAccent,
-        foregroundColor: Colors.white,
-        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-      ),
+      style: ElevatedButton.styleFrom(backgroundColor: baseColor[400]),
     ),
   );
 
-  // 🌙 Tema gelap (Dark Theme)
-  static ThemeData darkTheme = ThemeData(
-    brightness: Brightness.dark,
-    primaryColor: Colors.deepPurpleAccent,
-    scaffoldBackgroundColor: const Color(0xFF121212),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.deepPurpleAccent,
-      foregroundColor: Colors.white,
-      elevation: 0,
+  static final darkTheme = ThemeData(
+    colorScheme: ColorScheme.dark(
+      primary: baseColor[700]!,
+      secondary: baseColor[400]!,
     ),
-    textTheme: const TextTheme(
-      bodyMedium: TextStyle(color: Colors.white70, fontSize: 16),
-      headlineSmall: TextStyle(
-        color: Colors.white,
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
+    scaffoldBackgroundColor: Colors.brown[900],
+    appBarTheme: AppBarTheme(backgroundColor: baseColor[700]),
     elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.deepPurpleAccent,
-        foregroundColor: Colors.white,
-        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-      ),
+      style: ElevatedButton.styleFrom(backgroundColor: baseColor[500]),
     ),
   );
 }

@@ -2,81 +2,102 @@ import 'package:flutter/material.dart';
 import 'quiz_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final VoidCallback toggleTheme;
+  final bool isDarkMode;
+
+  const HomePage({
+    super.key,
+    required this.toggleTheme,
+    required this.isDarkMode,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  String? selectedCategory;
 
-  void _startQuiz() {
-    final name = _nameController.text.trim();
-    if (name.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Masukkan nama dulu Bos 😎")),
-      );
-      return;
-    }
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => QuizPage(userName: name), // ✅ diperbaiki di sini
-      ),
-    );
-  }
+  final List<String> categories = [
+    "Dasar Kopi",
+    "Manual Brew",
+    "Sejarah Kopi"
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.quiz, size: 80, color: Colors.blueAccent),
-              const SizedBox(height: 20),
-              const Text(
-                "Aplikasi Kuis Pilihan Ganda",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                ),
+      appBar: AppBar(
+        title: const Text("Coffee Quiz ☕"),
+        actions: [
+          IconButton(
+            icon: Icon(
+              widget.isDarkMode ? Icons.wb_sunny : Icons.dark_mode,
+            ),
+            onPressed: widget.toggleTheme,
+          )
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text(
+              "Masukkan Nama Kamu:",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Nama kamu...",
               ),
-              const SizedBox(height: 30),
-              TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: "Masukkan Nama Kamu",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              "Pilih Kategori Pertanyaan:",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            DropdownButton<String>(
+              isExpanded: true,
+              value: selectedCategory,
+              hint: const Text("Pilih kategori"),
+              items: categories.map((cat) {
+                return DropdownMenuItem(value: cat, child: Text(cat));
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  selectedCategory = value;
+                });
+              },
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                if (nameController.text.isEmpty || selectedCategory == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Lengkapi nama & kategori dulu!")),
+                  );
+                  return;
+                }
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => QuizPage(
+                      userName: nameController.text,
+                      category: selectedCategory!,
+                    ),
                   ),
-                  prefixIcon: const Icon(Icons.person),
-                ),
-              ),
-              const SizedBox(height: 25),
-              ElevatedButton(
-                onPressed: _startQuiz,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  "Mulai Kuis 🚀",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
+                );
+              },
+              child: const Text("Mulai Kuis 🚀"),
+            ),
+          ],
         ),
       ),
     );
