@@ -2,6 +2,18 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'result_page.dart';
 import '../widgets/question_card.dart';
+import 'package:audioplayers/audioplayers.dart';
+
+final player = AudioPlayer();
+
+void playCorrectSound() {
+  player.play(AssetSource('sounds/seruput.mp3'));
+}
+
+void playWrongSound() {
+  player.play(AssetSource('sounds/hmm.mp3'));
+}
+
 
 class QuizPage extends StatefulWidget {
   final String userName;
@@ -217,7 +229,12 @@ class _QuizPageState extends State<QuizPage> {
       "isCorrect": isCorrect,
     });
 
-    if (isCorrect) score++;
+    if (isCorrect) {
+    score++;
+    playCorrectSound(); // 
+  } else {
+    playWrongSound(); 
+  }
 
     // ✅ Notifikasi benar/salah
     ScaffoldMessenger.of(context).showSnackBar(
