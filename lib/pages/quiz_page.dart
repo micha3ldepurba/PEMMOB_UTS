@@ -16,50 +16,190 @@ class _QuizPageState extends State<QuizPage> {
   int score = 0;
 
   late final List<Map<String, dynamic>> questions;
+  final List<Map<String, dynamic>> userAnswers = [];
+
+  final List<Map<String, dynamic>> _allQuestions = [
+    {
+      "question": "Kopi jenis apa yang paling terkenal dari Indonesia?",
+      "options": ["Arabika", "Liberika", "Robusta", "Excelsa"],
+      "answer": "Arabika",
+      "description":
+          "Kopi Arabika dikenal sebagai kopi unggulan dari Indonesia dengan cita rasa lembut dan sedikit asam."
+    },
+    {
+      "question": "Metode seduh kopi manual yang populer disebut apa?",
+      "options": ["Espresso", "Pour Over", "Instant", "Cold Brew"],
+      "answer": "Pour Over",
+      "description":
+          "Pour Over adalah metode manual brewing dengan menuangkan air panas perlahan di atas bubuk kopi."
+    },
+    {
+      "question": "Apa efek utama kafein pada tubuh manusia?",
+      "options": [
+        "Mengantuk",
+        "Meningkatkan fokus",
+        "Menurunkan energi",
+        "Menyebabkan lapar"
+      ],
+      "answer": "Meningkatkan fokus",
+      "description":
+          "Kafein bekerja sebagai stimulan yang membantu meningkatkan fokus dan kewaspadaan."
+    },
+    {
+      "question": "Apa yang dimaksud dengan single origin coffee?",
+      "options": [
+        "Campuran berbagai biji kopi",
+        "Kopi dari satu daerah tertentu",
+        "Kopi tanpa kafein",
+        "Kopi yang dicampur susu"
+      ],
+      "answer": "Kopi dari satu daerah tertentu",
+      "description":
+          "Single origin artinya biji kopi berasal dari satu lokasi atau perkebunan tertentu."
+    },
+    {
+      "question": "Proses pemanggangan biji kopi disebut?",
+      "options": ["Grinding", "Roasting", "Brewing", "Filtering"],
+      "answer": "Roasting",
+      "description":
+          "Roasting adalah proses pemanggangan biji kopi mentah untuk mengeluarkan aroma dan rasa khasnya."
+    },
+    {
+      "question": "Alat seduh berbentuk kerucut dengan filter disebut?",
+      "options": ["French Press", "V60", "Moka Pot", "AeroPress"],
+      "answer": "V60",
+      "description":
+          "V60 adalah alat pour-over berbentuk kerucut yang populer digunakan untuk menyeduh kopi manual."
+    },
+    {
+      "question": "Espresso berasal dari negara mana?",
+      "options": ["Brasil", "Italia", "Ethiopia", "Peru"],
+      "answer": "Italia",
+      "description":
+          "Espresso berasal dari Italia dan menjadi dasar dari berbagai minuman kopi modern."
+    },
+    {
+      "question": "Apa perbedaan utama antara latte dan cappuccino?",
+      "options": ["Jumlah susu dan busa", "Jenis biji kopi", "Suhu air", "Cara penyajian"],
+      "answer": "Jumlah susu dan busa",
+      "description":
+          "Latte memiliki lebih banyak susu dan lebih sedikit busa dibanding cappuccino."
+    },
+    {
+      "question": "Kopi luwak terkenal karena apa?",
+      "options": [
+        "Rasa pahitnya",
+        "Proses fermentasi alami oleh luwak",
+        "Asal dari Bali",
+        "Diseduh dengan susu kambing"
+      ],
+      "answer": "Proses fermentasi alami oleh luwak",
+      "description":
+          "Kopi luwak berasal dari biji kopi yang dimakan dan dikeluarkan kembali oleh luwak, memberikan rasa khas."
+    },
+    {
+      "question": "Cold brew dibuat dengan cara apa?",
+      "options": [
+        "Menggunakan air panas",
+        "Diseduh dengan air dingin lama",
+        "Dicampur soda",
+        "Diseduh dengan es batu langsung"
+      ],
+      "answer": "Diseduh dengan air dingin lama",
+      "description":
+          "Cold brew dibuat dengan merendam bubuk kopi dalam air dingin selama 8–24 jam."
+    },
+    {
+      "question": "Apa fungsi utama dari tamper dalam pembuatan espresso?",
+      "options": ["Menekan bubuk kopi", "Menyaring air", "Mengatur suhu", "Membuat busa"],
+      "answer": "Menekan bubuk kopi",
+      "description":
+          "Tamper digunakan untuk memadatkan bubuk kopi di portafilter agar ekstraksi lebih merata."
+    },
+    {
+      "question": "Negara penghasil kopi terbesar di dunia adalah?",
+      "options": ["Brasil", "Kolombia", "Indonesia", "Vietnam"],
+      "answer": "Brasil",
+      "description":
+          "Brasil dikenal sebagai produsen kopi terbesar di dunia karena iklim dan lahan yang ideal."
+    },
+    {
+      "question": "Robusta memiliki kadar kafein lebih ... dari Arabika?",
+      "options": ["Tinggi", "Rendah", "Sama", "Tidak tentu"],
+      "answer": "Tinggi",
+      "description":
+          "Kopi Robusta mengandung kafein hampir dua kali lipat lebih banyak dari Arabika."
+    },
+    {
+      "question": "Kopi decaf berarti apa?",
+      "options": ["Tanpa kafein", "Kopi dingin", "Kopi susu", "Kopi hitam pekat"],
+      "answer": "Tanpa kafein",
+      "description":
+          "Decaf coffee telah melewati proses pengurangan kadar kafein hingga hampir nol."
+    },
+    {
+      "question": "Kopi dari Gayo terkenal karena?",
+      "options": [
+        "Aromanya kuat dan asam seimbang",
+        "Pahit ekstrem",
+        "Dingin saat disajikan",
+        "Rasanya hambar"
+      ],
+      "answer": "Aromanya kuat dan asam seimbang",
+      "description":
+          "Kopi Gayo dari Aceh dikenal karena aroma kuat, keasaman seimbang, dan body yang halus."
+    },
+  ];
 
   @override
   void initState() {
     super.initState();
     questions = List<Map<String, dynamic>>.from(_allQuestions)
       ..shuffle(Random())
-      ..length = 10; // ✅ ambil cuma 10 pertanyaan acak
+      ..length = 10;
   }
 
   void checkAnswer(String selected) {
-    final correctAnswer = questions[currentIndex]["answer"];
-    final explanation = questions[currentIndex]["description"];
+    final correct = questions[currentIndex]["answer"];
+    final desc = questions[currentIndex]["description"];
+    final isCorrect = selected == correct;
 
-    if (selected == correctAnswer) {
+    userAnswers.add({
+      "question": questions[currentIndex]["question"],
+      "selected": selected,
+      "correct": correct,
+      "isCorrect": isCorrect,
+      "description": desc,
+    });
+
+    if (isCorrect) {
       score++;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("✅ Benar! $desc")),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "❌ Salah Bos! ${questions[currentIndex]["description"]}",
-            style: const TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Colors.redAccent,
-          duration: const Duration(seconds: 3),
-        ),
+        SnackBar(content: Text("❌ Salah! $desc")),
       );
     }
 
-    if (currentIndex < questions.length - 1) {
-      setState(() {
-        currentIndex++;
-      });
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => ResultPage(
-            userName: widget.userName,
-            score: score,
-            total: questions.length,
+    Future.delayed(const Duration(seconds: 2), () {
+      if (currentIndex < questions.length - 1) {
+        setState(() => currentIndex++);
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ResultPage(
+              userName: widget.userName,
+              score: score,
+              total: questions.length,
+              userAnswers: userAnswers,
+            ),
           ),
-        ),
-      );
-    }
+        );
+      }
+    });
   }
 
   @override
@@ -71,7 +211,7 @@ class _QuizPageState extends State<QuizPage> {
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -91,128 +231,4 @@ class _QuizPageState extends State<QuizPage> {
       ),
     );
   }
-
-  // ✅ Semua pertanyaan disini (20 total)
-  final List<Map<String, dynamic>> _allQuestions = [
-    {
-      "question": "Kopi jenis apa yang paling terkenal dari Indonesia?",
-      "options": ["Arabika", "Liberika", "Robusta", "Excelsa"],
-      "answer": "Arabika",
-      "description": "Kopi Arabika dari Indonesia, seperti Gayo dan Toraja, dikenal di seluruh dunia karena cita rasa khasnya."
-    },
-    {
-      "question": "Metode seduh kopi manual yang populer disebut apa?",
-      "options": ["Espresso", "Pour Over", "Instant", "Cold Brew"],
-      "answer": "Pour Over",
-      "description": "Pour over memungkinkan kontrol sempurna terhadap ekstraksi kopi, menghasilkan rasa yang bersih dan halus."
-    },
-    {
-      "question": "Apa efek utama kafein pada tubuh manusia?",
-      "options": ["Mengantuk", "Meningkatkan fokus", "Menurunkan energi", "Menyebabkan lapar"],
-      "answer": "Meningkatkan fokus",
-      "description": "Kafein adalah stimulan alami yang membantu meningkatkan fokus dan kewaspadaan."
-    },
-    {
-      "question": "Apa negara asal minuman kopi?",
-      "options": ["Brazil", "Etiopia", "Kolombia", "Yaman"],
-      "answer": "Etiopia",
-      "description": "Kopi pertama kali ditemukan di Etiopia sebelum menyebar ke Timur Tengah dan seluruh dunia."
-    },
-    {
-      "question": "Apa yang dimaksud dengan 'single origin' pada kopi?",
-      "options": ["Campuran berbagai daerah", "Kopi dari satu daerah", "Kopi instan", "Kopi tanpa kafein"],
-      "answer": "Kopi dari satu daerah",
-      "description": "Single origin berarti biji kopi berasal dari satu daerah atau perkebunan tertentu."
-    },
-    {
-      "question": "Apa fungsi grinder dalam proses penyeduhan kopi?",
-      "options": ["Memanaskan air", "Menggiling biji kopi", "Memasak kopi", "Menyaring ampas"],
-      "answer": "Menggiling biji kopi",
-      "description": "Grinder berfungsi menggiling biji kopi agar ukuran gilingan sesuai metode seduh."
-    },
-    {
-      "question": "Apa itu 'Crema' pada espresso?",
-      "options": ["Buih susu", "Lapisan minyak di permukaan", "Bubuk kopi", "Gula karamel"],
-      "answer": "Lapisan minyak di permukaan",
-      "description": "Crema adalah lapisan busa keemasan hasil tekanan tinggi saat mengekstraksi espresso."
-    },
-    {
-      "question": "Minuman 'Latte' terdiri dari apa saja?",
-      "options": ["Espresso dan susu panas", "Kopi hitam dan gula", "Espresso dan air", "Espresso dan es"],
-      "answer": "Espresso dan susu panas",
-      "description": "Latte dibuat dari espresso yang dicampur dengan susu panas dan sedikit busa di atasnya."
-    },
-    {
-      "question": "Kopi Robusta memiliki karakteristik rasa seperti apa?",
-      "options": ["Asam dan lembut", "Pahit dan kuat", "Manis dan ringan", "Asin dan pedas"],
-      "answer": "Pahit dan kuat",
-      "description": "Robusta mengandung lebih banyak kafein dan memiliki rasa yang lebih pahit dan berat dibanding Arabika."
-    },
-    {
-      "question": "Proses 'Roasting' pada kopi bertujuan untuk apa?",
-      "options": ["Mengupas kulit kopi", "Mengeringkan biji kopi", "Mengeluarkan aroma dan rasa kopi", "Menggiling kopi"],
-      "answer": "Mengeluarkan aroma dan rasa kopi",
-      "description": "Roasting mengubah biji kopi mentah menjadi cokelat dan mengeluarkan aroma khasnya."
-    },
-    {
-      "question": "Apa yang dimaksud dengan 'Cold Brew'?",
-      "options": ["Kopi panas yang didinginkan", "Kopi diseduh dengan air dingin lama", "Espresso dengan es", "Kopi instan dingin"],
-      "answer": "Kopi diseduh dengan air dingin lama",
-      "description": "Cold brew dibuat dengan merendam bubuk kopi dalam air dingin selama 12-24 jam."
-    },
-    {
-      "question": "Kopi ‘Toraja’ berasal dari provinsi mana?",
-      "options": ["Sumatera Utara", "Sulawesi Selatan", "Jawa Timur", "Bali"],
-      "answer": "Sulawesi Selatan",
-      "description": "Kopi Toraja berasal dari daerah pegunungan di Sulawesi Selatan dengan rasa earthy dan spicy."
-    },
-    {
-      "question": "Kopi Luwak terkenal karena apa?",
-      "options": ["Proses fermentasi alami", "Harga murah", "Biji terbesar", "Tanpa kafein"],
-      "answer": "Proses fermentasi alami",
-      "description": "Kopi Luwak dihasilkan dari biji yang dimakan dan dikeluarkan kembali oleh musang luwak, lalu diproses ulang."
-    },
-    {
-      "question": "Alat seduh ‘French Press’ bekerja dengan cara apa?",
-      "options": ["Tekanan udara", "Perendaman dan penekanan", "Penyaringan kertas", "Panas tinggi"],
-      "answer": "Perendaman dan penekanan",
-      "description": "French press merendam kopi dalam air panas, lalu menekan ampas ke bawah dengan saringan logam."
-    },
-    {
-      "question": "Apa arti dari istilah ‘cupping’ dalam dunia kopi?",
-      "options": ["Menilai rasa kopi", "Menggiling biji kopi", "Menyeduh espresso", "Menanam kopi"],
-      "answer": "Menilai rasa kopi",
-      "description": "Cupping adalah metode profesional untuk mencicipi dan menilai profil rasa kopi."
-    },
-    {
-      "question": "Apa perbedaan utama kopi Arabika dan Robusta?",
-      "options": ["Warna biji", "Kadar kafein dan rasa", "Cara menanam", "Ukuran cangkir"],
-      "answer": "Kadar kafein dan rasa",
-      "description": "Arabika lebih asam dan lembut, sedangkan Robusta lebih pahit dan berkafein tinggi."
-    },
-    {
-      "question": "Kopi Gayo berasal dari daerah mana?",
-      "options": ["Aceh", "Bali", "Papua", "Sulawesi"],
-      "answer": "Aceh",
-      "description": "Kopi Gayo berasal dari dataran tinggi Gayo, Aceh, dan dikenal beraroma wangi dan seimbang."
-    },
-    {
-      "question": "Apa itu espresso shot ‘ristretto’?",
-      "options": ["Espresso dengan lebih banyak air", "Espresso dengan waktu ekstraksi lebih pendek", "Espresso dingin", "Espresso dengan susu"],
-      "answer": "Espresso dengan waktu ekstraksi lebih pendek",
-      "description": "Ristretto adalah versi espresso yang lebih pekat karena diekstraksi dalam waktu lebih singkat."
-    },
-    {
-      "question": "Apa yang dimaksud dengan ‘latte art’?",
-      "options": ["Menggambar di atas latte dengan susu", "Desain cangkir kopi", "Teknik menggiling kopi", "Pola pada biji kopi"],
-      "answer": "Menggambar di atas latte dengan susu",
-      "description": "Latte art dibuat dengan menuang susu panas ke espresso untuk membentuk pola estetis."
-    },
-    {
-      "question": "Negara penghasil kopi terbesar di dunia adalah?",
-      "options": ["Indonesia", "Brazil", "Kolombia", "Vietnam"],
-      "answer": "Brazil",
-      "description": "Brazil adalah penghasil kopi terbesar di dunia selama lebih dari 150 tahun."
-    },
-  ];
 }
